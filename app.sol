@@ -3,6 +3,7 @@ pragma solidity ^0.8.18;
 
 contract ProposalContract {
     struct Proposal {
+        string title;         // New field for the title of the proposal
         string description;
         uint256 approve;
         uint256 reject;
@@ -26,9 +27,10 @@ contract ProposalContract {
         owner = msg.sender; // Set the contract creator as the owner
     }
 
-    // Function to create a new proposal
-    function createProposal(string memory _description, uint256 _voteLimit) public onlyOwner {
+    // Adjusted function to create a new proposal with title
+    function createProposal(string memory _title, string memory _description, uint256 _voteLimit) public onlyOwner {
         proposal_history[nextProposalId] = Proposal({
+            title: _title,
             description: _description,
             approve: 0,
             reject: 0,
@@ -39,8 +41,7 @@ contract ProposalContract {
         });
         nextProposalId++; // Increment the proposal ID for the next proposal
     }
-
-    // Voting function
+// Voting function
     function vote(uint256 _proposalId, bool _approve, bool _reject, bool _pass) public {
         require(proposal_history[_proposalId].is_active, "Proposal is not active");
         require(_approve != _reject && _approve != _pass, "Invalid vote");
